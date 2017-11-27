@@ -13,10 +13,7 @@ class PagesController < ApplicationController
 
   def update
     @page = Page.find(params[:id])
-    if @page.update(title: params[:page][:title],
-                    author: params[:page][:author],
-                    content: params[:page][:content],
-                    public: params[:page][:public])
+    if @page.update(page_params)
       redirect_to page_path(@page)
     else
       render :edit
@@ -28,10 +25,7 @@ class PagesController < ApplicationController
   end
 
   def create
-    @page = Page.new(title: params[:page][:title],
-                     author: params[:page][:author],
-                     content: params[:page][:content],
-                     public: params[:page][:public])
+    @page = Page.new(page_params)
     if @page.save
       redirect_to pages_path
     else
@@ -42,5 +36,12 @@ class PagesController < ApplicationController
   def destroy
     Page.find(params[:id]).destroy
     redirect_to pages_path
+  end
+
+  private
+
+  #Strong Params
+  def page_params
+    params.require(:page).permit(:title, :author, :content, :public)
   end
 end
